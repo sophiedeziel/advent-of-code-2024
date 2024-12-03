@@ -1,5 +1,6 @@
 
 class Solution < BaseSolution
+  puts "jour-02"
   def initialize(input_mode)
   reports = File.open("jour-02/#{input_mode}.txt", 'r').map do |line|
     line.split(' ').map(&:to_i)

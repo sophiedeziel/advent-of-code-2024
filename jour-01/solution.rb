@@ -1,5 +1,6 @@
 
 class Solution < BaseSolution
+    puts "jour-01"
   def initialize(input_mode)
     list1 = []
     list2 = []

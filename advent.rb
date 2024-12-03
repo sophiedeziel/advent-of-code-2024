@@ -2,7 +2,16 @@ require 'listen'
 require 'pry'
 require 'io/console'
 
-system "clear"
+def reset_screen
+  system "clear"
+
+  puts "Advent of Code"
+  puts "=============="
+  puts "q: Quit, i: Use input, e: Use example, r: Reload, n: Next day"
+  puts ""
+end
+
+reset_screen
 
 class BaseSolution
 end
@@ -12,9 +21,7 @@ end
 
 def run(file)
   system("stty -raw echo")
-  system "clear"
-  puts "File: #{file}"
-  puts @input_mode
+  reset_screen
   @last_file = file
   load(@last_file)
   instance = Solution.new(@input_mode)
