@@ -1,4 +1,4 @@
-require 'pry'
+
 
 list1 = []
 list2 = []
@@ -12,8 +12,14 @@ end
 list1.sort!
 list2.sort!
 
-solution = list1.zip(list2).sum do |first, last|
+total_distance = list1.zip(list2).sum do |first, last|
   [first, last].max - [first, last].min
 end
 
-puts 'Solution: ' + solution.to_s
+puts 'Partie 1: ' + total_distance.to_s
+
+similarity_score = list1.sum do |number|
+  number * list2.count(number)
+end
+
+puts 'Partie 2: ' + similarity_score.to_s
