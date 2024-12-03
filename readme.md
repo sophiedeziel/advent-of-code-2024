@@ -1,0 +1,3 @@
+```Terminal
+ruby advent.rb
+```
