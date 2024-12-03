@@ -3,39 +3,29 @@ class Solution < BaseSolution
   puts "jour-03"
   def initialize(input_mode)
     @input = File.open("jour-03/#{input_mode}.txt", 'r').read
-    instructions = @input.scan(/(mul\(\d+,\d+\))|(do\(\))|(don't\(\))/).flat_map do |list|
-      list.compact
-    end
-    @part1 = sum_commands(instructions)
 
+    @sum = 0
+    @filtered_sum = 0
     enabled = true
-    filtered = []
-    instructions.each do |instruction|
-      next if instruction.include?('mul(') && !enabled
-      next enabled = false if instruction.include?("don't()")
-      next enabled = true  if instruction.include?("do()")
-      filtered << instruction
+    @input.scan(/mul\((\d+),(\d+)\)|(do\(\))|(don't\(\))/).each do |list|
+      case list
+      in [nil, nil, "do()", nil]
+        enabled = true
+      in [nil, nil, nil, "don't()"]
+        enabled = false
+      in [String, String, nil, nil]
+        first, last = list.map(&:to_i)
+        @sum += first.to_i * last.to_i
+        @filtered_sum += first.to_i * last.to_i if enabled
+      end
     end
-
-    @part2 = sum_commands(filtered)
   end
 
   def part1
-    @part1
+    @sum
   end
 
   def part2
-    @part2
-  end
-
-  private
-
-  def sum_commands(instructions)
-    instructions.map { |instruction| mul(instruction) if instruction.include?('mul(') }.compact.sum
-  end
-
-  def mul(string)
-    first, last = string.scan(/\d+/).map(&:to_i)
-    first * last
+    @filtered_sum
   end
 end
