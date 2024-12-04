@@ -27,20 +27,20 @@ def run(file)
   instance = Solution.new(@input_mode)
   puts "Partie 1: " + instance.part1.to_s
   puts "Partie 2: " + instance.part2.to_s
-  system("stty raw -echo")
+  rescue => e
+    puts e.detailed_message
+    puts e.backtrace
+  ensure
+    system("stty raw -echo")
 end
 
-listener = Listen.to('.', only: /\.rb$/, ignore: /advent.rb$/) do |modified, added, removed|
+@listener = Listen.to('.', only: /\.rb$/, ignore: /advent.rb$/) do |modified, added, removed|
   [modified].flatten.each do |file|
-    begin
-      run(file)
-    rescue => e
-      puts e
-    end
+    run(file)
   end
 end
 
-listener.start
+@listener.start
 
 loop do
   c = STDIN.getch
