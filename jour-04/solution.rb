@@ -5,9 +5,6 @@ class Solution < BaseSolution
     @input = File.open("jour-04/#{input_mode}.txt", 'r').map(&:chomp).map(&:each_char).map(&:to_a)
 
     @visual = Array.new(@input.count).map { Array.new(@input[0].count, ".") }
-
-    @part1 = @input
-    @part2 = nil
   end
 
   def part1
@@ -17,15 +14,16 @@ class Solution < BaseSolution
       end
     end
 
-    # @visual.each do |line|
-    #   puts line.join
-    # end
-
     sum
   end
 
   def part2
-    @part2
+    sum = @input.each_with_index.sum do |line, ln|
+      line.each_with_index.sum do |char, col|
+        scan_xmas2(char, ln, col)
+      end
+    end
+    sum
   end
 
   private
@@ -60,5 +58,23 @@ class Solution < BaseSolution
       @visual[ln + vln * 3][col + vcol * 3] = "S"
       true
     end
+  end
+
+  def scan_xmas2(char, ln, col)
+    return 0 if char != "A"
+    opposing_vectors = [
+      [[-1,-1], [ 1, 1]],
+      [[-1, 1], [ 1,-1]],
+    ]
+
+    opposing_vectors.count do |(vln1, vcol1), (vln2, vcol2)|
+      next if ln + vln1 <= -1 || ln + vln1 >= @input.count
+      next if col + vcol1 < 0 || col + vcol1 >= @input[ln].count
+      next if ln + vln2 <= -1 || ln + vln2 >= @input.count
+      next if col + vcol2 < 0 || col + vcol2 >= @input[ln].count
+      letters = [@input.dig(ln + vln1,     col + vcol1), @input.dig(ln + vln2, col + vcol2)]
+      next unless letters == ["M", "S"] || letters == ["S", "M"]
+      true
+    end == 2 ? 1 : 0
   end
 end
