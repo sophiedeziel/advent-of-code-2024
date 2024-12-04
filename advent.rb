@@ -60,8 +60,14 @@ loop do
     next_day = Dir.glob('*').select {|f| File.directory? f}.select {|f| f.match?(/jour-\d+/)}.count + 1
     dir_name = "jour-#{next_day.to_s.rjust(2, '0')}"
     Dir.mkdir dir_name
-    File.write("#{dir_name}/input.txt", "")
-    File.write("#{dir_name}/example.txt", "")
+
     File.write("#{dir_name}/solution.rb", File.open("solution_template.rb", 'r').read.gsub("<<dir>>", dir_name))
+    puts "Created #{dir_name}/solution.rb"
+
+    File.write("#{dir_name}/input.txt", "")
+    puts "Created #{dir_name}/input.txt"
+
+    File.write("#{dir_name}/example.txt", "")
+    puts "Created #{dir_name}/example.txt"
   end
 end
