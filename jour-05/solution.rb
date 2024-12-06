@@ -15,26 +15,42 @@ class Solution < BaseSolution
     end
 
     @correctly_ordered, @incorectly_ordered = @updates.partition do |update|
-      @rules.all? do |(x,y)|
-        next true if update.index(x).nil? || update.index(y).nil?
-        update.index(x) < update.index(y)
-      end
+      applicable_rules(update).all? { |rule| valid?(update, rule) }
     end
   end
 
   def part1
-    @correctly_ordered.map { |update| update[update.count/2] }.sum
+    middle_number_sum(@correctly_ordered)
   end
 
   def part2
-    @incorectly_ordered.map do |update|
-      update.each do |page|
-        applicable_rules = @rules.select { |x,y| update.include?(x) && update.include?(y) }
-          applicable_rules.each do |(x,y)|
-            next if update.index(x) < update.index(y)
-            update.insert(update.index(x), update.delete_at(update.index(y)))
-          end
+    middle_number_sum(reorder(@incorectly_ordered))
+  end
+
+  private
+
+  def reorder(updates)
+    updates.each do |update|
+      while !applicable_rules(update).all? { |rule| valid?(update, rule) }
+        applicable_rules(update).each do |rule|
+          next if valid?(update, rule)
+          x, y = rule
+          update.insert(update.index(x), update.delete_at(update.index(y)))
+        end
       end
-    end.map { |update| update[update.count/2] }.sum
+    end
+  end
+
+  def middle_number_sum(list)
+    list.map { |update| update[update.count/2] }.sum
+  end
+
+  def applicable_rules(update)
+    @rules.select { |x,y| update.include?(x) && update.include?(y) }
+  end
+
+  def valid?(update, rule)
+    x, y = rule
+    update.index(x) < update.index(y)
   end
 end
