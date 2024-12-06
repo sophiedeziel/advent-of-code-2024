@@ -13,19 +13,28 @@ class Solution < BaseSolution
     while (line = @input.gets)
       @updates << line.chomp.split(",").map(&:to_i)
     end
-  end
 
-  def part1
-    @updates.select do |update|
+    @correctly_ordered, @incorectly_ordered = @updates.partition do |update|
       @rules.all? do |(x,y)|
         next true if update.index(x).nil? || update.index(y).nil?
         update.index(x) < update.index(y)
       end
-    end.map { |update| update[update.count/2] }.sum
+    end
+  end
 
+  def part1
+    @correctly_ordered.map { |update| update[update.count/2] }.sum
   end
 
   def part2
-    @part2
+    @incorectly_ordered.map do |update|
+      update.each do |page|
+        applicable_rules = @rules.select { |x,y| update.include?(x) && update.include?(y) }
+          applicable_rules.each do |(x,y)|
+            next if update.index(x) < update.index(y)
+            update.insert(update.index(x), update.delete_at(update.index(y)))
+          end
+      end
+    end.map { |update| update[update.count/2] }.sum
   end
 end
