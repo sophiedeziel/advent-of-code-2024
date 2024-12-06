@@ -24,19 +24,20 @@ class Solution < BaseSolution
   end
 
   def part2
-    middle_number_sum(reorder(@incorectly_ordered))
+    @incorectly_ordered.each { |update| reorder(update) }
+    middle_number_sum(@incorectly_ordered)
   end
 
   private
 
-  def reorder(updates)
-    updates.each do |update|
-      while !applicable_rules(update).all? { |rule| valid?(update, rule) }
-        applicable_rules(update).each do |rule|
-          next if valid?(update, rule)
-          x, y = rule
-          update.insert(update.index(x), update.delete_at(update.index(y)))
-        end
+  def reorder(update)
+    rules = applicable_rules(update)
+
+    while !rules.all? { |rule| valid?(update, rule) }
+      rules.each do |rule|
+        next if valid?(update, rule)
+        x, y = rule
+        update.insert(update.index(x), update.delete_at(update.index(y)))
       end
     end
   end
