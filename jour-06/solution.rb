@@ -14,6 +14,7 @@ class Solution < BaseSolution
     @path.values.count - 1
   end
 
+  # lent. Je suis sure qu'il y a des optimisations à faire
   def part2
     to_block =  @path.keys.map &:dup
     to_block.count do |(line_i, col_i)|
