@@ -17,7 +17,7 @@ class BaseSolution
 end
 
 @last_file = nil
-@input_mode = "input"
+@input_mode = "example"
 
 def run(file)
   system("stty -raw echo")
