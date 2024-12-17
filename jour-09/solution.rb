@@ -31,13 +31,40 @@ class Solution < BaseSolution
       defraged << disk.pop if disk.any?
     end
 
-    defraged.each_with_index.sum do |number, index|
-      number * index
-    end
+    checksum(defraged)
   end
 
   def part2
+    disk = []
+    @input.each_with_index do |number, index|
+      if index % 2 == 0
+        disk << [number, index / 2]
+      else
+        disk << [number, nil]
+      end
+    end
 
+    disk.dup.reverse.each do |number, id|
+      next if id.nil?
+
+      file_index = disk.index { |x, i| i == id}
+      file = disk[file_index]
+
+      spot = disk.first(file_index).index { |x, i| i.nil? && x >= number }
+      next if spot.nil?
+
+      next if spot >= file_index
+      disk[file_index][1] = nil
+
+      if disk[spot].first == number
+        disk.delete_at(spot)
+      else
+        disk[spot][0] -= number
+      end
+
+      disk.insert(spot, [number, id])
+    end
+    checksum(disk.flat_map{|x, i| [i] * x})
   end
 
   private
@@ -54,5 +81,11 @@ class Solution < BaseSolution
 
   def first_nil_index(disk)
     disk.index(nil)
+  end
+
+  def checksum(defraged)
+    defraged.each_with_index.sum do |number, index|
+      (number || 0) * index
+    end
   end
 end
