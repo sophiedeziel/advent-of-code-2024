@@ -24,6 +24,22 @@ class Solution < BaseSolution
   end
 
   def part2
-    @part2
+    @input.sum do |total, numbers|
+      (0...(3**(numbers.count - 1))).to_a.find do |i|
+        operators = i.to_s(3).rjust((numbers.count - 1), "0").split('')
+        # puts operators.inspect
+        first, *rest = numbers
+        total == rest.inject(first) do |sum, number|
+          case operators.shift
+          when "0"
+            (sum + number)
+          when "1"
+            (sum * number)
+          when "2"
+            (sum.to_s + number.to_s).to_i
+          end
+        end
+      end.nil? ? 0 : total
+    end
   end
 end
