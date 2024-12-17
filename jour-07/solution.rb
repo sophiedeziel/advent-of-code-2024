@@ -12,7 +12,9 @@ class Solution < BaseSolution
   # 3600597604 too low
   # 93655130849 not right
   def part1
+    set_size(@input.count)
     @input.sum do |total, numbers|
+      tick
       (0...(2**(numbers.count - 1))).to_a.find do |i|
         operators = i.to_s(2).rjust((numbers.count - 1), "0").split('').map{ |c| c == '1' }
         first, *rest = numbers
@@ -24,12 +26,14 @@ class Solution < BaseSolution
   end
 
   def part2
+    set_size(@input.count)
     @input.sum do |total, numbers|
+      tick
       (0...(3**(numbers.count - 1))).to_a.find do |i|
         operators = i.to_s(3).rjust((numbers.count - 1), "0").split('')
-        # puts operators.inspect
         first, *rest = numbers
         total == rest.inject(first) do |sum, number|
+          break sum if sum > total
           case operators.shift
           when "0"
             (sum + number)

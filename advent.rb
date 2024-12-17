@@ -14,6 +14,20 @@ end
 reset_screen
 
 class BaseSolution
+  def set_size(size)
+    @size = size
+  end
+
+  def tick
+    @current = @current + 1
+    percent = (@current / @size.to_f * 100).round(2)
+    print "#{percent}%\r"
+  end
+
+  def reset_ticks
+    @current = 0
+    @size = 0
+  end
 end
 
 @last_file = nil
@@ -25,8 +39,15 @@ def run(file)
   @last_file = file
   load(@last_file)
   instance = Solution.new(@input_mode)
-  puts "Partie 1: " + instance.part1.to_s
-  puts "Partie 2: " + instance.part2.to_s
+  instance.reset_ticks
+  result = instance.part1
+  puts "Partie 1: " + result.to_s
+  instance.reset_ticks
+  start = Time.now
+  result = instance.part2
+  finish = Time.now
+  puts "Partie 2: " + result.to_s
+  puts "Time: #{finish - start}"
   rescue => e
     puts e.detailed_message
     puts e.backtrace
