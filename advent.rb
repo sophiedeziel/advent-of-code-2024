@@ -39,15 +39,15 @@ def run(file)
   @last_file = file
   load(@last_file)
   instance = Solution.new(@input_mode)
+
   instance.reset_ticks
   result = instance.part1
   puts "Partie 1: " + result.to_s
+
   instance.reset_ticks
-  start = Time.now
   result = instance.part2
-  finish = Time.now
   puts "Partie 2: " + result.to_s
-  puts "Time: #{finish - start}"
+
   rescue => e
     puts e.detailed_message
     puts e.backtrace

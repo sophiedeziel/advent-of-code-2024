@@ -33,8 +33,37 @@ class Solution < BaseSolution
     @antinodes.uniq.count
   end
 
+  # 845 too low
   def part2
-    @part2
+    @antinodes = []
+    @antenas.each do |antena, points|
+      to_check = points.dup
+      while to_check.any?
+        point = to_check.shift
+        to_check.each do |other_point|
+          ln, col = point
+          ln2, col2 = other_point
+
+          distanceln = (ln2 - ln)
+          distancecol = (col2 - col)
+
+          while in_map?(ln, col)
+            @antinodes << [ln, col]
+            ln -= distanceln
+            col -= distancecol
+          end
+
+          ln, col = point
+
+          while in_map?(ln2, col2)
+            @antinodes << [ln2, col2]
+            ln2 += distanceln
+            col2 += distancecol
+          end
+        end
+      end
+    end
+    @antinodes.uniq.count
   end
 
   private
